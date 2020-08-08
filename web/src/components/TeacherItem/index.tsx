@@ -1,35 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css'
+import api from '../../services/api';
 
-let nome: String = "lalalala";
-let subject: String = "Math";
-let about: String = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur voluptates, illo est nam autem ipsum dicta itaque iure quod natus recusandae nisi. Sapiente perspiciatis voluptate possimus officia, quis praesentium eius.";
-let value: number = 80.00;
-let photo: String = "https://avatars0.githubusercontent.com/u/57363888?s=400&u=c9600f979b25029bad6dbcbbdeb1d79b7407b785&v=4"
+export interface Teacher {
+        id: number;
+        name: string;
+        avatar: string;
+        subject: string;
+        bio: string;
+        cost: number;
+        whatsapp: string;
+}
 
-function TeacherItem () {
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+
+const TeacherItem: React.FC<TeacherItemProps> = ({teacher}) => {
+
+    function createConnection() {
+        api.post('connect', {
+            user_id: teacher.id
+        })
+
+    }
     return (
         <div className="teacher-item">
             <header>
-                <img src="https://avatars0.githubusercontent.com/u/57363888?s=400&u=c9600f979b25029bad6dbcbbdeb1d79b7407b785&v=4" alt="" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>{nome}</strong>
-                    <span>{subject}</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
-            <p>{about}</p>
+
+            <p>{teacher.bio}</p>
+
             <footer>
                 <p>
                     Preço/Hora
-                    <strong>R$ {value}</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a target="_blank" onClick={createConnection} href={`http://wa.me/${teacher.whatsapp}`}>
                     <img src={whatsappIcon} alt="WhatsApp" />
                     Entrar em contato
-                </button>
+                </a>
             </footer>
         </div>
     )
